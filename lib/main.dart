@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:white_noise_backgraund_play_module/view/home_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'view/whitenoise_player_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -11,12 +17,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'WhiteNoise Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: WhiteNoiseScreen(),
     );
   }
 }

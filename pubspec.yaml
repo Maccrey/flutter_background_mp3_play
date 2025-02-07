@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   just_audio_background: ^0.0.1-beta.14
   just_audio: ^0.9.42
+  flutter_riverpod: ^2.6.1
 
 dev_dependencies:
   flutter_test:
