@@ -62,14 +62,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      // soundControlButton(
+                      //     '카페소리', 'assets/cafe-noise-32940.mp3', 'cafe'),
                       soundControlButton(
-                          '카페소리', 'assets/cafe-noise-32940.mp3', 'cafe'),
-                      soundControlButton('비소리',
-                          'assets/sound-of-falling-rain-145473.mp3', 'rain'),
+                          '카페소리', 'lib/core/mp3/cafe-noise-32940.mp3', 'cafe'),
                       soundControlButton(
-                          '바람소리', 'assets/wind__artic__cold-6195.mp3', 'wind'),
-                      soundControlButton('장작소리',
-                          'assets/fireplace-with-crackling-sounds.mp3', 'fire'),
+                          '비소리',
+                          'lib/core/mp3/sound-of-falling-rain-145473.mp3',
+                          'rain'),
+                      soundControlButton('바람소리',
+                          'lib/core/mp3/wind__artic__cold-6195.mp3', 'wind'),
+                      soundControlButton(
+                          '장작소리',
+                          'lib/core/mp3/fireplace-with-crackling-sounds.mp3',
+                          'fire'),
                     ],
                   ),
                 ),
