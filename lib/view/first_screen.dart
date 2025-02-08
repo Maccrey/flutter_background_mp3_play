@@ -23,48 +23,77 @@ class FirstScreen extends ConsumerWidget {
       drawer: Container(
         height: MediaQuery.of(context).size.height * 0.85,
         child: Drawer(
-          width: MediaQuery.of(context).size.width * 0.25,
+          backgroundColor: Colors.white,
+          width: MediaQuery.of(context).size.width * 0.20,
           child: Column(
             children: [
               Expanded(
-                child: playingAudios.isNotEmpty
-                    ? ListView.builder(
-                        itemCount: playingAudios.length,
-                        itemBuilder: (context, index) {
-                          final playingAudio = playingAudios[index];
+                  child: playingAudios.isNotEmpty
+                      ? ListView.builder(
+                          itemCount: playingAudios.length,
+                          itemBuilder: (context, index) {
+                            final playingAudio = playingAudios[index];
 
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: Column(
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    ref
-                                        .read(multiAudioViewModelProvider
-                                            .notifier)
-                                        .togglePlayback(playingAudio.assetPath);
-                                  },
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      playingAudio.imagePath,
-                                      width: 60, // 고정된 크기 설정
-                                      height: 60, // 고정된 크기 설정
-                                      fit: BoxFit.cover,
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      ref
+                                          .read(multiAudioViewModelProvider
+                                              .notifier)
+                                          .togglePlayback(
+                                              playingAudio.assetPath);
+                                    },
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        playingAudio.imagePath,
+                                        width: 60, // 고정된 크기 설정
+                                        height: 60, // 고정된 크기 설정
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  playingAudio.name,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                              ],
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    playingAudio.name,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      : Center(
+                          child: InkWell(
+                            onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => WhiteNoiseScreen())),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: "화이트 노이즈가 재생되고 있지 않습니다"
+                                  // "White noise is not playing"
+                                  .split('')
+                                  .map((char) {
+                                return Text(
+                                  char,
+                                  style: TextStyle(fontSize: 14),
+                                );
+                              }).toList(),
                             ),
-                          );
-                        },
-                      )
-                    : const Center(child: Text("현재 재생 중인 오디오가 없습니다")),
+                          ),
+                        )),
+              Text(
+                'Stop',
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54),
               ),
+              SizedBox(height: 20),
             ],
           ),
         ),
