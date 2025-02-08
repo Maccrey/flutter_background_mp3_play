@@ -9,7 +9,19 @@ class WhiteNoiseScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final audioList = ref.watch(multiAudioViewModelProvider);
-    final screenWidth = MediaQuery.of(context).size.width; // 화면 너비
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    // 🔹 재생 중인 항목을 앞쪽으로 정렬
+    final sortedAudioList = [...audioList]..sort((a, b) {
+        if (a.playbackState == PlaybackState.playing &&
+            b.playbackState != PlaybackState.playing) {
+          return -1;
+        } else if (a.playbackState != PlaybackState.playing &&
+            b.playbackState == PlaybackState.playing) {
+          return 1;
+        }
+        return 0;
+      });
 
     return Scaffold(
       backgroundColor: Colors.grey[100],
@@ -29,18 +41,16 @@ class WhiteNoiseScreen extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: Container(
             height: MediaQuery.of(context).size.height * 0.68,
-            // color: Colors.red,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: (screenWidth ~/ 150)
-                    .toInt(), // 150px 간격으로 배치, 화면 너비에 따라 개수 조절
-                childAspectRatio: 1.0, // 정사각형 비율
+                crossAxisCount: (screenWidth ~/ 150).toInt(),
+                childAspectRatio: 1.0,
                 crossAxisSpacing: 16,
                 mainAxisSpacing: 16,
               ),
-              itemCount: audioList.length,
+              itemCount: sortedAudioList.length,
               itemBuilder: (context, index) {
-                final audio = audioList[index];
+                final audio = sortedAudioList[index];
                 return _buildSoundControlButton(context, ref, audio);
               },
             ),
@@ -53,45 +63,43 @@ class WhiteNoiseScreen extends ConsumerWidget {
   Widget _buildSoundControlButton(
       BuildContext context, WidgetRef ref, AudioModel audio) {
     return Stack(
-      // Stack 위젯으로 변경
       children: [
         // 배경 이미지
         Container(
-            width: 200,
-            height: 200,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8), // 원하는 둥글기 값 설정
-              child: Image.asset(
-                audio.imagePath,
-                fit: BoxFit.cover, // 이미지 채우기 방식
-                height: double.infinity, // Stack에 꽉 채우도록 설정
-                width: double.infinity,
-              ),
-            )),
+          width: 200,
+          height: 200,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              audio.imagePath,
+              fit: BoxFit.cover,
+              height: double.infinity,
+              width: double.infinity,
+            ),
+          ),
+        ),
 
-        // Card 내용 (기존 코드와 거의 동일)
+        // Card 내용
         Card(
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8),
           ),
-          color: Colors.black38, // Card 배경 투명하게 설정
+          color: Colors.black38,
           child: InkWell(
             onTap: () => ref
                 .read(multiAudioViewModelProvider.notifier)
                 .togglePlayback(audio.assetPath),
-            borderRadius:
-                BorderRadius.circular(8), // Card의 borderRadius와 동일하게 설정
+            borderRadius: BorderRadius.circular(8),
             child: Padding(
-              // Padding 추가
-              padding: const EdgeInsets.all(8.0), // 내용에 padding 추가
+              padding: const EdgeInsets.all(8.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
                     _getPlaybackIcon(audio.playbackState),
                     size: 60,
-                    color: Colors.white, // 아이콘 색상 변경
+                    color: Colors.white,
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
@@ -101,7 +109,7 @@ class WhiteNoiseScreen extends ConsumerWidget {
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white, // 텍스트 색상 변경
+                        color: Colors.white,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -114,8 +122,8 @@ class WhiteNoiseScreen extends ConsumerWidget {
                       final duration = snapshot.data ?? Duration.zero;
                       return Text(
                         '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.white), // 텍스트 색상 변경
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.white),
                       );
                     },
                   ),
@@ -127,8 +135,7 @@ class WhiteNoiseScreen extends ConsumerWidget {
                             _buildVolumeDialog(context, ref, audio),
                       );
                     },
-                    icon: const Icon(Icons.volume_up,
-                        color: Colors.white), // 아이콘 색상 변경
+                    icon: const Icon(Icons.volume_up, color: Colors.white),
                   ),
                 ],
               ),
