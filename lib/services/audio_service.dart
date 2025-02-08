@@ -39,8 +39,8 @@ class MultiAudioService {
 }
 
 final multiAudioViewModelProvider =
-    StateNotifierProvider<MultiAudioViewModel, List<AudioModel>>((ref) {
-  return MultiAudioViewModel(
+    StateNotifierProvider<MultiAudioprovider, List<AudioModel>>((ref) {
+  return MultiAudioprovider(
     audioService: MultiAudioService(),
     initialSounds: [
       AudioModel(

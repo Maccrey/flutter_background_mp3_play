@@ -3,10 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/audio_model.dart';
 import '../services/audio_service.dart';
 
-class MultiAudioViewModel extends StateNotifier<List<AudioModel>> {
+class MultiAudioprovider extends StateNotifier<List<AudioModel>> {
   final MultiAudioService audioService;
 
-  MultiAudioViewModel({
+  MultiAudioprovider({
     required this.audioService,
     required List<AudioModel> initialSounds,
   }) : super(initialSounds);

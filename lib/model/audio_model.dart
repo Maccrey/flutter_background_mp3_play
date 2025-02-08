@@ -28,6 +28,17 @@ class AudioModel {
       volume: volume ?? this.volume,
     );
   }
+
+  // Static method inside the AudioModel class
+  static AudioModel empty() {
+    return AudioModel(
+      name: '',
+      assetPath: '',
+      imagePath: '',
+      playbackState: PlaybackState.stopped,
+      volume: 0.0,
+    );
+  }
 }
 
 enum PlaybackState {
