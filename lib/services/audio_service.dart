@@ -12,6 +12,7 @@ class MultiAudioService {
       final player = AudioPlayer();
       await player.setAsset(assetPath);
       await player.setLoopMode(LoopMode.all);
+      await player.setVolume(0.3); // 볼륨을 30%로 설정
       _audioPlayers[assetPath] = player;
     }
 
@@ -43,21 +44,39 @@ final multiAudioViewModelProvider =
     audioService: MultiAudioService(),
     initialSounds: [
       AudioModel(
-        name: 'Cafe Noise',
-        assetPath: 'lib/core/mp3/cafe-noise-32940.mp3',
-      ),
+          name: 'Cafe',
+          assetPath: 'lib/core/mp3/cafe-noise-32940.mp3',
+          imagePath: 'lib/core/images/cafe.png'),
       AudioModel(
-        name: 'Rain Noise',
-        assetPath: 'lib/core/mp3/sound-of-falling-rain-145473.mp3',
-      ),
+          name: 'Rain',
+          assetPath: 'lib/core/mp3/sound-of-falling-rain-145473.mp3',
+          imagePath: 'lib/core/images/rain.png'),
       AudioModel(
-        name: 'Wind Noise',
-        assetPath: 'lib/core/mp3/wind__artic__cold-6195.mp3',
-      ),
+          name: 'Wind',
+          assetPath: 'lib/core/mp3/wind__artic__cold-6195.mp3',
+          imagePath: 'lib/core/images/wind.png'),
       AudioModel(
-        name: 'Fire Noise',
-        assetPath: 'lib/core/mp3/fireplace-with-crackling-sounds.mp3',
-      ),
+          name: 'Fire',
+          assetPath: 'lib/core/mp3/fireplace-with-crackling-sounds.mp3',
+          imagePath: 'lib/core/images/fireplase.png'),
+      AudioModel(
+          name: 'Chime',
+          assetPath: 'lib/core/mp3/wind-chime-small-64660.mp3',
+          imagePath: 'lib/core/images/windchime.png'),
+      AudioModel(
+          name: 'Stream',
+          assetPath:
+              'lib/core/mp3/the-sound-of-a-stream-a-spring-stream-the-sound-of-water-109237.mp3',
+          imagePath: 'lib/core/images/stream.png'),
+      AudioModel(
+          name: 'Wave',
+          assetPath: 'lib/core/mp3/soft-waves-on-the-beach-sound-190884.mp3',
+          imagePath: 'lib/core/images/wave.png'),
+      AudioModel(
+          name: 'Bird',
+          assetPath:
+              'lib/core/mp3/evening-birds-singing-in-spring-background-sounds-of-nature-146388.mp3',
+          imagePath: 'lib/core/images/bird.png'),
     ],
   );
 });

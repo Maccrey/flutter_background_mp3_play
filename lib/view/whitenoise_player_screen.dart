@@ -27,19 +27,23 @@ class WhiteNoiseScreen extends ConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: (screenWidth ~/ 150)
-                  .toInt(), // 150px 간격으로 배치, 화면 너비에 따라 개수 조절
-              childAspectRatio: 1.0, // 정사각형 비율
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+          child: Container(
+            height: MediaQuery.of(context).size.height * 0.68,
+            // color: Colors.red,
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: (screenWidth ~/ 150)
+                    .toInt(), // 150px 간격으로 배치, 화면 너비에 따라 개수 조절
+                childAspectRatio: 1.0, // 정사각형 비율
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+              ),
+              itemCount: audioList.length,
+              itemBuilder: (context, index) {
+                final audio = audioList[index];
+                return _buildSoundControlButton(context, ref, audio);
+              },
             ),
-            itemCount: audioList.length,
-            itemBuilder: (context, index) {
-              final audio = audioList[index];
-              return _buildSoundControlButton(context, ref, audio);
-            },
           ),
         ),
       ),
@@ -48,57 +52,90 @@ class WhiteNoiseScreen extends ConsumerWidget {
 
   Widget _buildSoundControlButton(
       BuildContext context, WidgetRef ref, AudioModel audio) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: InkWell(
-        onTap: () => ref
-            .read(multiAudioViewModelProvider.notifier)
-            .togglePlayback(audio.assetPath),
-        borderRadius: BorderRadius.circular(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              _getPlaybackIcon(audio.playbackState),
-              size: 48,
-              color: Colors.blue,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              audio.name,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+    return Stack(
+      // Stack 위젯으로 변경
+      children: [
+        // 배경 이미지
+        Container(
+            width: 200,
+            height: 200,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8), // 원하는 둥글기 값 설정
+              child: Image.asset(
+                audio.imagePath,
+                fit: BoxFit.cover, // 이미지 채우기 방식
+                height: double.infinity, // Stack에 꽉 채우도록 설정
+                width: double.infinity,
               ),
-              textAlign: TextAlign.center,
+            )),
+
+        // Card 내용 (기존 코드와 거의 동일)
+        Card(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          color: Colors.black38, // Card 배경 투명하게 설정
+          child: InkWell(
+            onTap: () => ref
+                .read(multiAudioViewModelProvider.notifier)
+                .togglePlayback(audio.assetPath),
+            borderRadius:
+                BorderRadius.circular(8), // Card의 borderRadius와 동일하게 설정
+            child: Padding(
+              // Padding 추가
+              padding: const EdgeInsets.all(8.0), // 내용에 padding 추가
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    _getPlaybackIcon(audio.playbackState),
+                    size: 60,
+                    color: Colors.white, // 아이콘 색상 변경
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: 70,
+                    child: Text(
+                      audio.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white, // 텍스트 색상 변경
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  StreamBuilder<Duration>(
+                    stream: ref
+                        .read(multiAudioViewModelProvider.notifier)
+                        .getPositionStream(audio.assetPath),
+                    builder: (context, snapshot) {
+                      final duration = snapshot.data ?? Duration.zero;
+                      return Text(
+                        '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                        style: const TextStyle(
+                            fontSize: 14, color: Colors.white), // 텍스트 색상 변경
+                      );
+                    },
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) =>
+                            _buildVolumeDialog(context, ref, audio),
+                      );
+                    },
+                    icon: const Icon(Icons.volume_up,
+                        color: Colors.white), // 아이콘 색상 변경
+                  ),
+                ],
+              ),
             ),
-            StreamBuilder<Duration>(
-              stream: ref
-                  .read(multiAudioViewModelProvider.notifier)
-                  .getPositionStream(audio.assetPath),
-              builder: (context, snapshot) {
-                final duration = snapshot.data ?? Duration.zero;
-                return Text(
-                  '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
-                  style: TextStyle(fontSize: 14),
-                );
-              },
-            ),
-            IconButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => _buildVolumeDialog(context, ref, audio),
-                );
-              },
-              icon: const Icon(Icons.volume_up),
-            ),
-          ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
