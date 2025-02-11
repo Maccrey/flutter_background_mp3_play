@@ -98,12 +98,12 @@ class WhiteNoiseScreen extends ConsumerWidget {
                 children: [
                   Icon(
                     _getPlaybackIcon(audio.playbackState),
-                    size: 60,
+                    size: 40,
                     color: Colors.white,
                   ),
                   const SizedBox(height: 8),
                   SizedBox(
-                    width: 70,
+                    width: 60,
                     child: Text(
                       audio.name,
                       style: const TextStyle(
@@ -114,18 +114,21 @@ class WhiteNoiseScreen extends ConsumerWidget {
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  StreamBuilder<Duration>(
-                    stream: ref
-                        .read(multiAudioViewModelProvider.notifier)
-                        .getPositionStream(audio.assetPath),
-                    builder: (context, snapshot) {
-                      final duration = snapshot.data ?? Duration.zero;
-                      return Text(
-                        '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
-                        style:
-                            const TextStyle(fontSize: 14, color: Colors.white),
-                      );
-                    },
+                  SizedBox(
+                    height: 2,
+                    child: StreamBuilder<Duration>(
+                      stream: ref
+                          .read(multiAudioViewModelProvider.notifier)
+                          .getPositionStream(audio.assetPath),
+                      builder: (context, snapshot) {
+                        final duration = snapshot.data ?? Duration.zero;
+                        return Text(
+                          '${duration.inMinutes}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                          style: const TextStyle(
+                              fontSize: 10, color: Colors.white),
+                        );
+                      },
+                    ),
                   ),
                   IconButton(
                     onPressed: () {
